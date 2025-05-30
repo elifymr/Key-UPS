@@ -1,0 +1,9 @@
+{
+  "valid_keys": {
+    "BeyzaPubg": {
+      "expire": "2025-06-30 23:59",
+      "max_devices": 3,
+      "blocked": false
+    }
+  }
+}
