@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Eğlence Bankası</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #004a8d;
+            --secondary-blue: #0066cc;
+            --light-blue: #e6f0ff;
+            --dark-blue: #003366;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 0;
+            touch-action: manipulation;
+        }
+        
+        .app-container {
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: white;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 60px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .logo i {
+            font-size: 20px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .profile-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 15px;
+            max-width: 100%;
+            margin: 0 auto;
+            padding-bottom: 80px; /* Bottom nav için yer */
+        }
+        
+        .warning {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 1px solid #ffce67;
+            color: #856404;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        /* Screen Styles */
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Login Screen */
+        .login-form {
+            max-width: 100%;
+            margin: 30px auto;
+            padding: 25px 20px;
+            border-radius: var(--border-radius);
+            background: linear-gradient(to bottom right, #f8fbff, var(--light-blue));
+            box-shadow: var(--box-shadow);
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--primary-blue);
+            font-size: 22px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 14px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 12px;
+            border: 2px solid #cce0ff;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+            background: white;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 74, 141, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            width: 100%;
+            box-shadow: 0 3px 8px rgba(0, 74, 141, 0.3);
+            touch-action: manipulation;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 5px rgba(0, 74, 141, 0.3);
+        }
+        
+        button.secondary {
+            background: linear-gradient(135deg, var(--gray), #8a8a8a);
+        }
+        
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 18px;
+            box-shadow: var(--box-shadow);
+            border: 1px solid #eaeaea;
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .balance {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 12px 0;
+        }
+        
+        .currency-selector {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .currency-btn {
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 12px;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .currency-btn.active {
+            background: white;
+            color: var(--primary-blue);
+        }
+        
+        .iban-display {
+            background: var(--light-blue);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px dashed var(--primary-blue);
+            font-family: monospace;
+            margin: 8px 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary-blue);
+            word-break: break-all;
+        }
+        
+        /* Transfer Form */
+        .transfer-options {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .transfer-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
+            border: 2px solid var(--light-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 12px;
+        }
+        
+        .transfer-option.active {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+        }
+        
+        /* Transaction History */
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .transaction-details h4 {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+        
+        .transaction-details p {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .transaction-amount.positive {
+            color: var(--success);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .transaction-amount.negative {
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        /* Profile Screen */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .profile-picture {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 32px;
+            border: 3px solid var(--primary-blue);
+        }
+        
+        /* Cards Screen */
+        .card-display {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 15px 0;
+            position: relative;
+            height: 180px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .card-logo {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        
+        .card-number {
+            font-size: 18px;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-family: monospace;
+        }
+        
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+        
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 5px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 5px 8px;
+            border-radius: 8px;
+            flex: 1;
+            max-width: 80px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-blue);
+        }
+        
+        .nav-item i {
+            font-size: 18px;
+        }
+        
+        .nav-item span {
+            font-size: 11px;
+            text-align: center;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 18px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
+            max-width: 90%;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, var(--success), #20c997);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger), #e83e8c);
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--box-shadow);
+            animation: modalFadeIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        @keyframes modalFadeIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--gray);
+            width: auto;
+            box-shadow: none;
+            padding: 5px;
+        }
+        
+        /* User List */
+        .user-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            background: var(--light);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .user-card:active {
+            transform: scale(0.98);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .user-info h4 {
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+        
+        .user-info p {
+            color: var(--gray);
+            font-size: 12px;
+        }
+        
+        /* Responsive Improvements */
+        @media (max-width: 360px) {
+            .main-content {
+                padding: 10px;
+                padding-bottom: 70px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .balance {
+                font-size: 24px;
+            }
+            
+            .nav-item span {
+                font-size: 10px;
+            }
+        }
+        
+        /* WebView Optimizations */
+        .safe-area-padding {
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        /* Hide scrollbars but keep functionality */
+        .user-list::-webkit-scrollbar {
+            width: 3px;
+        }
+        
+        .user-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .user-list::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="safe-area-padding">
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-university"></i>
+                <span>Eğlence Bankası</span>
+            </div>
+            <div class="user-profile">
+                <div class="profile-circle" id="profileBtn">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="warning">
+                <i class="fas fa-exclamation-triangle"></i> BU BİR EĞLENCE UYGULAMASIDIR!
+            </div>
+            
+            <!-- Login Screen -->
+            <div id="loginScreen" class="screen active">
+                <div class="login-form">
+                    <h2>Hesabınıza Giriş Yapın</h2>
+                    <div class="form-group">
+                        <label for="username"><i class="fas fa-user"></i> Kullanıcı Adı</label>
+                        <input type="text" id="username" placeholder="Kullanıcı adınızı girin" autocapitalize="none">
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-lock"></i> Şifre</label>
+                        <input type="password" id="password" placeholder="Şifrenizi girin">
+                    </div>
+                    <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> Giriş Yap</button>
+                    <p style="margin-top: 20px; text-align: center; color: #666; font-size: 13px;">
+                        Demo hesaplar:<br>
+                        <strong>ahmet</strong> / <strong>1234</strong><br>
+                        <strong>mehmet</strong> / <strong>1234</strong><br>
+                        <strong>ayse</strong> / <strong>1234</strong>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Dashboard Screen -->
+            <div id="dashboardScreen" class="screen">
+                <div class="dashboard-grid">
+                    <!-- Balance Card -->
+                    <div class="card balance-card">
+                        <h3>Bakiyeniz</h3>
+                        <div class="balance">₺<span id="balanceAmount">0.00</span></div>
+                        <div class="currency-selector">
+                            <div class="currency-btn active" data-currency="₺">₺ TRY</div>
+                            <div class="currency-btn" data-currency="$">$ USD</div>
+                            <div class="currency-btn" data-currency="€">€ EUR</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account Info -->
+                    <div class="card">
+                        <h3>Hesap Bilgileri</h3>
+                        <p>Hoş geldiniz, <span id="userName" style="font-weight: bold; color: var(--primary-blue);">Kullanıcı</span></p>
+                        <p>IBAN:</p>
+                        <div class="iban-display" id="ibanDisplay">TR00 0000 0000 0000 0000 0000 00</div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <h3>Hızlı İşlemler</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;">
+                            <button id="quickTransferBtn"><i class="fas fa-paper-plane"></i> Para Gönder</button>
+                            <button class="secondary" id="viewCardsBtn"><i class="fas fa-credit-card"></i> Kartlarım</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Transactions -->
+                    <div class="card">
+                        <h3>Son İşlemler</h3>
+                        <div id="recentTransactions">
+                            <div style="text-align: center; padding: 20px; color: var(--gray);">
+                                <i class="fas fa-history" style="font-size: 24px; margin-bottom: 10px;"></i>
+                                <p>Henüz işlem bulunmuyor</p>
+                            </div>
+                        </div>
+                        <button class="secondary" style="margin-top: 12px;" id="viewAllTransactionsBtn">Tüm İşlemleri Gör</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Transfer Screen -->
+            <div id="transferScreen" class="screen">
+                <div class="card">
+                    <h3>Para Transferi</h3>
+                    
+                    <div class="transfer-options">
+                        <div class="transfer-option active" data-type="iban">
+                            <i class="fas fa-university"></i>
+                            <div>IBAN ile</div>
+                        </div>
+                        <div class="transfer-option" data-type="phone">
+                            <i class="fas fa-mobile-alt"></i>
+                            <div>Telefon No</div>
+                        </div>
+                        <div class="transfer-option" data-type="user">
+                            <i class="fas fa-user"></i>
+                            <div>Kullanıcı</div>
+                        </div>
+                    </div>
+                    
+                    <div id="transferForms">
+                        <!-- IBAN Form -->
+                        <div class="transfer-form active" id="ibanForm">
+                            <div class="form-group">
+                                <label for="recipientName">Alıcı Ad Soyad</label>
+                                <input type="text" id="recipientName" placeholder="Alıcının adı ve soyadı">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipientIban">Alıcı IBAN</label>
+                                <input type="text" id="recipientIban" placeholder="TRXX XXXX XXXX XXXX XXXX XXXX XX">
+                            </div>
+                            <div class="form-group">
+                                <label for="transferAmount">Miktar (₺)</label>
+                                <input type="number" id="transferAmount" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal">
+                            </div>
+                            <div class="form-group">
+                                <label for="transferDescription">Açıklama</label>
+                                <input type="text" id="transferDescription" placeholder="Transfer açıklaması">
+                            </div>
+                            <button id="transferBtn"><i class="fas fa-paper-plane"></i> Para Gönder</button>
+                        </div>
+                        
+                        <!-- Phone Form -->
+                        <div class="transfer-form" id="phoneForm">
+                            <div class="form-group">
+                                <label for="recipientPhone">Alıcı Telefon Numarası</label>
+                                <input type="tel" id="recipientPhone" placeholder="5XX XXX XX XX" inputmode="tel">
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneAmount">Miktar (₺)</label>
+                                <input type="number" id="phoneAmount" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal">
+                            </div>
+                            <button id="phoneTransferBtn"><i class="fas fa-paper-plane"></i> Para Gönder</button>
+                        </div>
+                        
+                        <!-- User Form -->
+                        <div class="transfer-form" id="userForm">
+                            <div class="form-group">
+                                <label for="userSearch">Kullanıcı Ara</label>
+                                <input type="text" id="userSearch" placeholder="Kullanıcı adı veya ad soyad">
+                            </div>
+                            <div class="user-list" id="userList">
+                                <!-- Users will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cards Screen -->
+            <div id="cardsScreen" class="screen">
+                <div class="card">
+                    <h3>Kartlarım</h3>
+                    
+                    <div class="card-display">
+                        <div class="card-logo">
+                            <div style="font-size: 14px;">Eğlence Bankası</div>
+                            <div><i class="fas fa-sim-card"></i></div>
+                        </div>
+                        <div class="card-number" id="cardNumber">**** **** **** 1234</div>
+                        <div class="card-details">
+                            <div>
+                                <div>KART SAHİBİ</div>
+                                <div id="cardHolder" style="font-size: 14px;">AD SOYAD</div>
+                            </div>
+                            <div>
+                                <div>SON KULLANMA</div>
+                                <div id="cardExpiry" style="font-size: 14px;">12/25</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="iban-display" id="cardIbanDisplay">TR00 0000 0000 0000 0000 0000 00</div>
+                    
+                    <div style="margin-top: 15px;">
+                        <h4>Kart İşlemleri</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;">
+                            <button class="secondary"><i class="fas fa-lock"></i> Kartı Kilitle</button>
+                            <button class="secondary"><i class="fas fa-redo"></i> Sanal Kart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Screen -->
+            <div id="profileScreen" class="screen">
+                <div class="card">
+                    <div class="profile-header">
+                        <div class="profile-picture" id="profilePicture">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h2 id="profileUserName" style="font-size: 18px;">Kullanıcı Adı</h2>
+                            <p id="profileUserFullName">Ad Soyad</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Profil Ayarları</h3>
+                    <div class="form-group">
+                        <label for="profileName">Ad Soyad</label>
+                        <input type="text" id="profileName" placeholder="Adınız ve soyadınız">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileUsername">Kullanıcı Adı</label>
+                        <input type="text" id="profileUsername" placeholder="Kullanıcı adınız" autocapitalize="none">
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePassword">Yeni Şifre</label>
+                        <input type="password" id="profilePassword" placeholder="Yeni şifreniz">
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePasswordConfirm">Şifre Tekrar</label>
+                        <input type="password" id="profilePasswordConfirm" placeholder="Şifrenizi tekrar girin">
+                    </div>
+                    <button id="saveProfileBtn"><i class="fas fa-save"></i> Değişiklikleri Kaydet</button>
+                </div>
+            </div>
+            
+            <!-- Transactions Screen -->
+            <div id="transactionsScreen" class="screen">
+                <div class="card">
+                    <h3>Tüm İşlemler</h3>
+                    <div id="allTransactions">
+                        <!-- All transactions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav safe-area-padding">
+            <div class="nav-item active" data-screen="dashboardScreen">
+                <i class="fas fa-home"></i>
+                <span>Ana Sayfa</span>
+            </div>
+            <div class="nav-item" data-screen="transferScreen">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Transfer</span>
+            </div>
+            <div class="nav-item" data-screen="cardsScreen">
+                <i class="fas fa-credit-card"></i>
+                <span>Kartlar</span>
+            </div>
+            <div class="nav-item" data-screen="transactionsScreen">
+                <i class="fas fa-history"></i>
+                <span>İşlemler</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+    
+    <!-- Transfer Confirmation Modal -->
+    <div id="transferModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Transfer Onayı</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="transferDetails">
+                <!-- Transfer details will be shown here -->
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 15px;">
+                <button class="secondary" id="cancelTransferBtn">İptal</button>
+                <button id="confirmTransferBtn">Onayla</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // WebView optimizasyonları
+        document.addEventListener('DOMContentLoaded', function() {
+            // iOS WebView için viewport ayarı
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            }
+            
+            // Varsayılan kullanıcı verilerini oluştur
+            initializeAppData();
+            
+            // Event listeners - touch optimized
+            document.getElementById('loginBtn').addEventListener('click', login);
+            document.getElementById('transferBtn').addEventListener('click', showTransferConfirmation);
+            document.getElementById('phoneTransferBtn').addEventListener('click', showTransferConfirmation);
+            document.getElementById('confirmTransferBtn').addEventListener('click', processTransfer);
+            document.getElementById('cancelTransferBtn').addEventListener('click', closeModal);
+            document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
+            document.getElementById('profileBtn').addEventListener('click', showProfileScreen);
+            document.getElementById('quickTransferBtn').addEventListener('click', showTransferScreen);
+            document.getElementById('viewCardsBtn').addEventListener('click', showCardsScreen);
+            document.getElementById('viewAllTransactionsBtn').addEventListener('click', showTransactionsScreen);
+            
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const screenId = this.getAttribute('data-screen');
+                    showScreen(screenId);
+                    
+                    // Update active nav item
+                    document.querySelectorAll('.nav-item').forEach(nav => {
+                        nav.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+            
+            // Transfer options
+            document.querySelectorAll('.transfer-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    
+                    // Update active option
+                    document.querySelectorAll('.transfer-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Show corresponding form
+                    document.querySelectorAll('.transfer-form').forEach(form => {
+                        form.classList.remove('active');
+                    });
+                    document.getElementById(`${type}Form`).classList.add('active');
+                    
+                    if (type === 'user') {
+                        loadUserList();
+                    }
+                });
+            });
+            
+            // Currency selector
+            document.querySelectorAll('.currency-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const currency = this.getAttribute('data-currency');
+                    
+                    // Update active currency
+                    document.querySelectorAll('.currency-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Update balance display
+                    document.querySelector('.balance').innerHTML = `${currency}<span id="balanceAmount">0.00</span>`;
+                    updateBalanceDisplay();
+                });
+            });
+            
+            // Close modal
+            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            
+            // Enter key for login
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+            
+            // Modal backdrop close
+            document.getElementById('transferModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+            
+            // Sayfa yüklendiğinde otomatik giriş kontrolü
+            checkAutoLogin();
+            
+            // WebView için ek optimizasyonlar
+            preventZoom();
+            disableContextMenu();
+        });
+        
+        function preventZoom() {
+            document.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(e) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    e.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        }
+        
+        function disableContextMenu() {
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+        }
+        
+        // Diğer fonksiyonlar aynı kalacak, sadece WebView için optimize edilmiş versiyon
+        function initializeAppData() {
+            if (!localStorage.getItem('bankUsers')) {
+                const users = [
+                    { 
+                        username: 'ahmet', 
+                        password: '1234', 
+                        name: 'Ahmet Yılmaz', 
+                        balance: 5000, 
+                        iban: 'TR12 3456 7890 1234 5678 9012 34',
+                        cardNumber: '4532 1234 5678 9012',
+                        cardExpiry: '12/25',
+                        phone: '5551234567'
+                    },
+                    { 
+                        username: 'mehmet', 
+                        password: '1234', 
+                        name: 'Mehmet Demir', 
+                        balance: 7500, 
+                        iban: 'TR98 7654 3210 9876 5432 1098 76',
+                        cardNumber: '5521 8765 4321 0987',
+                        cardExpiry: '08/26',
+                        phone: '5559876543'
+                    },
+                    { 
+                        username: 'ayse', 
+                        password: '1234', 
+                        name: 'Ayşe Kaya', 
+                        balance: 3500, 
+                        iban: 'TR55 4444 3333 2222 1111 0000 99',
+                        cardNumber: '4024 0071 2345 6789',
+                        cardExpiry: '03/25',
+                        phone: '5554567890'
+                    }
+                ];
+                localStorage.setItem('bankUsers', JSON.stringify(users));
+            }
+            
+            if (!localStorage.getItem('transactions')) {
+                const transactions = {
+                    'ahmet': [
+                        { date: '2023-10-15 14:30', description: 'Maaş', amount: 5000, balance: 5000, type: 'credit', from: 'İşveren', to: 'Ahmet Yılmaz' },
+                        { date: '2023-10-18 09:45', description: 'Mehmet Demir\'e transfer', amount: -500, balance: 4500, type: 'debit', from: 'Ahmet Yılmaz', to: 'Mehmet Demir' }
+                    ],
+                    'mehmet': [
+                        { date: '2023-10-18 09:45', description: 'Ahmet Yılmaz\'dan transfer', amount: 500, balance: 8000, type: 'credit', from: 'Ahmet Yılmaz', to: 'Mehmet Demir' }
+                    ],
+                    'ayse': [
+                        { date: '2023-10-19 13:20', description: 'Mehmet Demir\'den transfer', amount: 750, balance: 4250, type: 'credit', from: 'Mehmet Demir', to: 'Ayşe Kaya' }
+                    ]
+                };
+                localStorage.setItem('transactions', JSON.stringify(transactions));
+            }
+        }
+        
+        // Kalan fonksiyonlar önceki versiyonla aynı
+        function checkAutoLogin() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                showMainScreen(JSON.parse(currentUser));
+            }
+        }
+        
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showNotification('Lütfen kullanıcı adı ve şifre giriniz.', 'error');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('bankUsers'));
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showMainScreen(user);
+                showNotification('Başarıyla giriş yapıldı!', 'success');
+            } else {
+                showNotification('Kullanıcı adı veya şifre hatalı!', 'error');
+            }
+        }
+        
+        function showMainScreen(user) {
+            showScreen('dashboardScreen');
+            updateDashboard(user);
+        }
+        
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        function updateDashboard(user) {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('balanceAmount').textContent = user.balance.toFixed(2);
+            document.getElementById('ibanDisplay').textContent = user.iban;
+            
+            document.getElementById('profileUserName').textContent = user.username;
+            document.getElementById('profileUserFullName').textContent = user.name;
+            document.getElementById('profileName').value = user.name;
+            document.getElementById('profileUsername').value = user.username;
+            
+            document.getElementById('cardNumber').textContent = user.cardNumber;
+            document.getElementById('cardHolder').textContent = user.name;
+            document.getElementById('cardExpiry').textContent = user.cardExpiry;
+            document.getElementById('cardIbanDisplay').textContent = user.iban;
+            
+            document.getElementById('profilePicture').textContent = user.name.charAt(0);
+            
+            loadRecentTransactions(user.username);
+        }
+        
+        function updateBalanceDisplay() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('balanceAmount').textContent = currentUser.balance.toFixed(2);
+            }
+        }
+        
+        function loadRecentTransactions(username) {
+            const transactions = JSON.parse(localStorage.getItem('transactions'));
+            const userTransactions = transactions[username] || [];
+            const recentContainer = document.getElementById('recentTransactions');
+            const allContainer = document.getElementById('allTransactions');
+            
+            recentContainer.innerHTML = '';
+            allContainer.innerHTML = '';
+            
+            if (userTransactions.length === 0) {
+                recentContainer.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--gray);">
+                        <i class="fas fa-history" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <p>Henüz işlem bulunmuyor</p>
+                    </div>
+                `;
+                allContainer.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--gray);">
+                        <i class="fas fa-history" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <p>Henüz işlem bulunmuyor</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const recentTransactions = userTransactions.slice(-5).reverse();
+            
+            recentTransactions.forEach(transaction => {
+                const transactionEl = createTransactionElement(transaction);
+                recentContainer.appendChild(transactionEl);
+            });
+            
+            userTransactions.slice().reverse().forEach(transaction => {
+                const transactionEl = createTransactionElement(transaction);
+                allContainer.appendChild(transactionEl);
+            });
+        }
+        
+        function createTransactionElement(transaction) {
+            const transactionEl = document.createElement('div');
+            transactionEl.className = 'transaction-item';
+            
+            const amountClass = transaction.amount >= 0 ? 'positive' : 'negative';
+            const amountSign = transaction.amount >= 0 ? '+' : '';
+            
+            transactionEl.innerHTML = `
+                <div class="transaction-details">
+                    <h4>${transaction.description}</h4>
+                    <p>${transaction.date} • ${transaction.from} → ${transaction.to}</p>
+                </div>
+                <div class="transaction-amount ${amountClass}">
+                    ${amountSign}${transaction.amount.toFixed(2)} ₺
+                </div>
+            `;
+            
+            return transactionEl;
+        }
+        
+        function loadUserList() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('bankUsers'));
+            const userList = document.getElementById('userList');
+            
+            userList.innerHTML = '';
+            
+            users.forEach(user => {
+                if (user.username !== currentUser.username) {
+                    const userCard = document.createElement('div');
+                    userCard.className = 'user-card';
+                    userCard.setAttribute('data-username', user.username);
+                    
+                    userCard.innerHTML = `
+                        <div class="user-avatar">
+                            ${user.name.charAt(0)}
+                        </div>
+                        <div class="user-info">
+                            <h4>${user.name}</h4>
+                            <p>@${user.username}</p>
+                        </div>
+                    `;
+                    
+                    userCard.addEventListener('click', function() {
+                        document.getElementById('recipientName').value = user.name;
+                        document.getElementById('recipientIban').value = user.iban;
+                        showScreen('transferScreen');
+                        document.getElementById('ibanForm').classList.add('active');
+                        document.getElementById('userForm').classList.remove('active');
+                        
+                        document.querySelectorAll('.transfer-option').forEach(opt => {
+                            opt.classList.remove('active');
+                        });
+                        document.querySelector('.transfer-option[data-type="iban"]').classList.add('active');
+                    });
+                    
+                    userList.appendChild(userCard);
+                }
+            });
+        }
+        
+        function showTransferConfirmation() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const activeForm = document.querySelector('.transfer-form.active').id;
+            let recipientName, recipientIdentifier, amount, description;
+            
+            if (activeForm === 'ibanForm') {
+                recipientName = document.getElementById('recipientName').value;
+                recipientIdentifier = document.getElementById('recipientIban').value;
+                amount = parseFloat(document.getElementById('transferAmount').value);
+                description = document.getElementById('transferDescription').value;
+            } else if (activeForm === 'phoneForm') {
+                recipientName = "Telefon ile transfer";
+                recipientIdentifier = document.getElementById('recipientPhone').value;
+                amount = parseFloat(document.getElementById('phoneAmount').value);
+                description = "Telefon numarasına transfer";
+            }
+            
+            if (!recipientName || !recipientIdentifier || !amount) {
+                showNotification('Lütfen tüm alanları doldurunuz.', 'error');
+                return;
+            }
+            
+            if (amount <= 0) {
+                showNotification('Lütfen geçerli bir miktar giriniz.', 'error');
+                return;
+            }
+            
+            if (amount > currentUser.balance) {
+                showNotification('Yetersiz bakiye!', 'error');
+                return;
+            }
+            
+            document.getElementById('transferDetails').innerHTML = `
+                <p><strong>Gönderen:</strong> ${currentUser.name}</p>
+                <p><strong>Alıcı:</strong> ${recipientName}</p>
+                <p><strong>IBAN/Telefon:</strong> ${recipientIdentifier}</p>
+                <p><strong>Miktar:</strong> ${amount.toFixed(2)} ₺</p>
+                <p><strong>Açıklama:</strong> ${description || '-'}</p>
+            `;
+            
+            document.getElementById('transferModal').classList.add('active');
+            
+            document.getElementById('transferModal').setAttribute('data-transfer-details', JSON.stringify({
+                recipientName,
+                recipientIdentifier,
+                amount,
+                description,
+                type: activeForm
+            }));
+        }
+        
+        function processTransfer() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const transferDetails = JSON.parse(document.getElementById('transferModal').getAttribute('data-transfer-details'));
+            
+            const users = JSON.parse(localStorage.getItem('bankUsers'));
+            
+            let recipient;
+            if (transferDetails.type === 'ibanForm') {
+                recipient = users.find(u => u.iban.replace(/\s/g, '') === transferDetails.recipientIdentifier.replace(/\s/g, ''));
+            } else if (transferDetails.type === 'phoneForm') {
+                recipient = users.find(u => u.phone === transferDetails.recipientIdentifier);
+            }
+            
+            if (!recipient) {
+                showNotification('Geçersiz alıcı bilgisi!', 'error');
+                closeModal();
+                return;
+            }
+            
+            if (recipient.username === currentUser.username) {
+                showNotification('Kendinize para transferi yapamazsınız!', 'error');
+                closeModal();
+                return;
+            }
+            
+            currentUser.balance -= transferDetails.amount;
+            const senderIndex = users.findIndex(u => u.username === currentUser.username);
+            users[senderIndex] = currentUser;
+            
+            recipient.balance += transferDetails.amount;
+            const recipientIndex = users.findIndex(u => u.username === recipient.username);
+            users[recipientIndex] = recipient;
+            
+            const transactions = JSON.parse(localStorage.getItem('transactions'));
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            if (!transactions[currentUser.username]) transactions[currentUser.username] = [];
+            transactions[currentUser.username].push({
+                date: dateStr,
+                description: transferDetails.description || `${recipient.name} hesabına transfer`,
+                amount: -transferDetails.amount,
+                balance: currentUser.balance,
+                type: 'debit',
+                from: currentUser.name,
+                to: recipient.name
+            });
+            
+            if (!transactions[recipient.username]) transactions[recipient.username] = [];
+            transactions[recipient.username].push({
+                date: dateStr,
+                description: transferDetails.description || `${currentUser.name} hesabından transfer`,
+                amount: transferDetails.amount,
+                balance: recipient.balance,
+                type: 'credit',
+                from: currentUser.name,
+                to: recipient.name
+            });
+            
+            localStorage.setItem('bankUsers', JSON.stringify(users));
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            updateDashboard(currentUser);
+            closeModal();
+            
+            document.getElementById('recipientName').value = '';
+            document.getElementById('recipientIban').value = '';
+            document.getElementById('transferAmount').value = '';
+            document.getElementById('transferDescription').value = '';
+            document.getElementById('recipientPhone').value = '';
+            document.getElementById('phoneAmount').value = '';
+            
+            showNotification(`Para transferi başarılı! ${recipient.name} hesabına ${transferDetails.amount.toFixed(2)} ₺ gönderildi.`, 'success');
+        }
+        
+        function closeModal() {
+            document.getElementById('transferModal').classList.remove('active');
+        }
+        
+        function showProfileScreen() {
+            showScreen('profileScreen');
+        }
+        
+        function showTransferScreen() {
+            showScreen('transferScreen');
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+            });
+            document.querySelector('.nav-item[data-screen="transferScreen"]').classList.add('active');
+        }
+        
+        function showCardsScreen() {
+            showScreen('cardsScreen');
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+            });
+            document.querySelector('.nav-item[data-screen="cardsScreen"]').classList.add('active');
+        }
+        
+        function showTransactionsScreen() {
+            showScreen('transactionsScreen');
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+            });
+            document.querySelector('.nav-item[data-screen="transactionsScreen"]').classList.add('active');
+        }
+        
+        function saveProfile() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('bankUsers'));
+            
+            const newName = document.getElementById('profileName').value;
+            const newUsername = document.getElementById('profileUsername').value;
+            const newPassword = document.getElementById('profilePassword').value;
+            const confirmPassword = document.getElementById('profilePasswordConfirm').value;
+            
+            if (!newName || !newUsername) {
+                showNotification('Lütfen ad soyad ve kullanıcı adı giriniz.', 'error');
+                return;
+            }
+            
+            if (newPassword && newPassword !== confirmPassword) {
+                showNotification('Şifreler eşleşmiyor!', 'error');
+                return;
+            }
+            
+            if (newUsername !== currentUser.username) {
+                const usernameExists = users.some(u => u.username === newUsername && u.username !== currentUser.username);
+                if (usernameExists) {
+                    showNotification('Bu kullanıcı adı zaten kullanılıyor!', 'error');
+                    return;
+                }
+            }
+            
+            currentUser.name = newName;
+            currentUser.username = newUsername;
+            if (newPassword) {
+                currentUser.password = newPassword;
+            }
+            
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+            }
+            
+            localStorage.setItem('bankUsers', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            updateDashboard(currentUser);
+            showNotification('Profil bilgileri başarıyla güncellendi!', 'success');
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
