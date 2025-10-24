@@ -1,0 +1,14 @@
+{
+  "MemCpy": {
+    "id": 2191341,
+    "version": "2.0",
+    "changelog": "Bellek yönetimi optimize edildi, crash fix eklendi.",
+    "download_url": "https://github.com/elifymr/Key-UPS/releases/download/MemCpy_v2.0/MemCpy_v2.0.zip"
+  },
+  "Yama": {
+    "id": 1912183,
+    "version": "3.7",
+    "changelog": "Yeni menü arayüzü, FPS stabilizasyonu eklendi.",
+    "download_url": "https://github.com/elifymr/Key-UPS/releases/download/Yamaa/main.cpp"
+  }
+}
